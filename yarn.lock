@@ -6406,6 +6406,12 @@ vm-browserify@0.0.4:
   dependencies:
     indexof "0.0.1"
 
+vue-browser-geolocation@^1.5.0:
+  version "1.5.0"
+  resolved "https://registry.yarnpkg.com/vue-browser-geolocation/-/vue-browser-geolocation-1.5.0.tgz#bbae3a01e8066c5526b921d7762aca8866cfd16f"
+  dependencies:
+    vue "^2.0.1"
+
 vue-cli-plugin-vuetify@^0.4.6:
   version "0.4.6"
   resolved "https://registry.yarnpkg.com/vue-cli-plugin-vuetify/-/vue-cli-plugin-vuetify-0.4.6.tgz#91c4534d17bc04bbd6f41eacdb6ff49be0f59f2b"
@@ -6464,7 +6470,7 @@ vue-template-es2015-compiler@^1.6.0:
   version "1.6.0"
   resolved "https://registry.yarnpkg.com/vue-template-es2015-compiler/-/vue-template-es2015-compiler-1.6.0.tgz#dc42697133302ce3017524356a6c61b7b69b4a18"
 
-vue@^2.5.17:
+vue@^2.0.1, vue@^2.5.17:
   version "2.5.17"
   resolved "https://registry.yarnpkg.com/vue/-/vue-2.5.17.tgz#0f8789ad718be68ca1872629832ed533589c6ada"
 
