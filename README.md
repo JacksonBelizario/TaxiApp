@@ -1,15 +1,21 @@
-# TaxiApp
-Trabalho de Banco de Dados - UEMS 2018
+# taxiapp
 
-#Instalando CLI local
-npm install @vue/cli --save-dev
-npm install @vue/cli-init --save-dev
+## Project setup
+```
+yarn install
+```
 
-#Executando CLI localmente
-node ./node_modules/@vue/cli/bin/vue.js create taxi-app
-node ./node_modules/@vue/cli/bin/vue.js add vuetify
-node ./node_modules/@vue/cli/bin/vue.js init vuetifyjs/pwa taxi
+### Compiles and hot-reloads for development
+```
+yarn run serve
+```
 
-#Exec Development
-cd taxi-app
-npm run serve
+### Compiles and minifies for production
+```
+yarn run build
+```
+
+### Lints and fixes files
+```
+yarn run lint
+```
