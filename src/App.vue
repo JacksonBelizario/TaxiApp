@@ -52,20 +52,60 @@
     </v-navigation-drawer>
     <v-toolbar color="amber" app absolute clipped-left>
       <v-toolbar-side-icon @click.native="drawer = !drawer"></v-toolbar-side-icon>
-      <span class="title ml-3 mr-5">Google&nbsp;<span class="font-weight-light">Keep</span></span>
+      <span class="title ml-3 mr-5">Taxi&nbsp;<span class="font-weight-light">App</span></span>
       <v-text-field
         solo-inverted
         flat
         hide-details
-        label="Search"
+        label="Pesquisar"
         prepend-inner-icon="search"
       ></v-text-field>
       <v-spacer></v-spacer>
+        <v-tooltip bottom>
+          <v-btn
+            slot="activator"
+            :href="source"
+            icon
+            large
+            target="_blank"
+            @click.stop="showRoute = !showRoute"
+          >
+            <v-icon v-if="!loading">near_me</v-icon>
+            <v-progress-circular  v-else indeterminate color="grey darken-4"></v-progress-circular>
+          </v-btn>
+          <span>Definir Rota</span>
+      </v-tooltip>
     </v-toolbar>
-    <v-content>
-      <v-container fluid>
-        <here-map :app-id="map.appId" :app-code="map.appCode" :coords="map.coords" />
-      </v-container>
+    <v-content :style="{position: 'relative'}">
+        <v-card
+          v-if="showRoute"
+         class="d-inline-block elevation-12"
+            :style="{position: 'absolute', top: '10px', left: '20px', right: '20px'}">
+          <v-navigation-drawer
+            permanent stateless value="true" width="100%">
+            <v-list dense>
+              <v-list-tile @click.stop="geolocateme">
+                <v-list-tile-action>
+                  <v-icon>my_location</v-icon>
+                </v-list-tile-action>
+
+                <v-list-tile-content>
+                  <v-list-tile-title>{{ location.origin }}</v-list-tile-title>
+                </v-list-tile-content>
+              </v-list-tile>
+              <v-list-tile @click.stop="setDestiny">
+                <v-list-tile-action>
+                  <v-icon>place</v-icon>
+                </v-list-tile-action>
+
+                <v-list-tile-content>
+                  <v-list-tile-title>{{ location.destination }}</v-list-tile-title>
+                </v-list-tile-content>
+              </v-list-tile>
+            </v-list>
+          </v-navigation-drawer>
+        </v-card>
+        <here-map ref="mapView" :app-id="map.appId" :app-code="map.appCode" :mHeigth="map.height" :onGetPos="onGetPos" :onGetDestiny="onGetDestiny" />
     </v-content>
   </v-app>
 </template>
@@ -76,10 +116,16 @@ export default {
 		HereMap: () => import("./components/HereMap.vue")
 	},
 	data: () => ({
+		showRoute: false,
+		loading: false,
 		map: {
 			appId: "sbpvVSquAAGctcKCQrLy",
 			appCode: "ErDGsA7NQz1Pd3BXiEKc-Q",
-			coords: null
+			height: null
+		},
+		location: {
+			origin: "Origem",
+			destination: "Destino"
 		},
 		drawer: null,
 		items: [
@@ -103,14 +149,35 @@ export default {
 		source: String
 	},
 	mounted() {
-		this.$getLocation({
-			enableHighAccuracy: true, //defaults to false
-			timeout: Infinity, //defaults to Infinity
-			maximumAge: 0 //defaults to 0
-		}).then(coordinates => {
-			console.log(coordinates);
-			this.map.coords = coordinates;
-		});
+		this.map.height = this.$el.clientHeight;
+	},
+	methods: {
+		geolocateme() {
+			this.loading = true;
+			//const self = this;
+			this.$getLocation({
+				enableHighAccuracy: true, //defaults to false
+				timeout: Infinity, //defaults to Infinity
+				maximumAge: 0 //defaults to 0
+			})
+				.then(coordinates => {
+					this.loading = false;
+					this.$refs.mapView.setOrigin(coordinates);
+					//self.$emit("center-location", coordinates);
+				})
+				.catch(err => {
+					this.loading = false;
+				});
+		},
+		onGetPos(res) {
+			this.location.origin = res.label;
+		},
+		setDestiny() {
+			this.$refs.mapView.setDestinyByClick();
+		},
+		onGetDestiny(res) {
+			this.location.destination = res.label;
+		}
 	}
 };
 </script>
