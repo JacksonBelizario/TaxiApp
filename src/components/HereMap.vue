@@ -21,6 +21,7 @@ export default {
 		return {
 			map: null,
 			platform: null,
+			behavior: null,
 			explore: null,
 			geocoder: null,
 			router: null,
@@ -38,9 +39,9 @@ export default {
 	computed: {},
 	methods: {
 		setOrigin(coords) {
-			this.coords = coords;
 			this.map.setCenter(coords);
 			if (this.origin == null) {
+				this.coords = coords;
 				this.origin = this.addMarker(coords);
 				this.setDummyTaxis(coords);
 			} else {
@@ -54,7 +55,7 @@ export default {
 					console.warn(error);
 				});
 			this.map.getViewPort().resize();
-			if (this.coords2) this.calculateRouteFromAtoB(coords, this.coords2);
+			this.calculateRouteFromAtoB(this.coords, this.coords2);
 		},
 		setDestinyByClick() {
 			this.clearDestination();
@@ -70,20 +71,13 @@ export default {
 				}
 			});
 		},
-		clearDestination() {
-			if (this.destiny) {
-				this.map.removeObject(this.destiny);
-				this.destiny = null;
-			}
-			if (this.routeLine) {
-				this.map.removeObject(this.routeLine);
-				this.routeLine = null;
-			}
-		},
 		setDestination(coords2) {
 			this.clearDestination();
 			this.coords2 = coords2;
-			this.destiny = this.addMarker(coords2);
+			this.destiny = this.addDraggableMarker(coords2, newcoords => {
+				this.coords2 = newcoords || this.coords2;
+				console.log("newcoords", newcoords);
+			});
 			this.getInfoLocation(coords2)
 				.then(res => {
 					if (this.onGetDestiny) this.onGetDestiny(res);
@@ -91,7 +85,20 @@ export default {
 				.catch(error => {
 					console.warn(error);
 				});
-			if (this.coords) this.calculateRouteFromAtoB(this.coords, coords2);
+			this.calculateRouteFromAtoB(this.coords, this.coords2);
+		},
+		clearDestination() {
+			if (this.destiny) {
+				this.map.removeObject(this.destiny);
+				this.destiny = null;
+			}
+			this.clearRoute();
+		},
+		clearRoute() {
+			if (this.routeLine) {
+				this.map.removeObject(this.routeLine);
+				this.routeLine = null;
+			}
 		},
 		addMarker(coords, svg = null) {
 			let marker;
@@ -150,7 +157,64 @@ export default {
 				);
 			});
 		},
+		addDraggableMarker(coords, changeCoords) {
+			const marker = new H.map.Marker(coords);
+			// Ensure that the marker can receive drag events
+			marker.draggable = true;
+			this.map.addObject(marker);
+
+			// disable the default draggability of the underlying map
+			// when starting to drag a marker object:
+			this.map.addEventListener(
+				"dragstart",
+				ev => {
+					let target = ev.target;
+					if (target instanceof H.map.Marker) {
+						this.behavior.disable();
+					}
+					this.clearRoute();
+				},
+				false
+			);
+
+			// re-enable the default draggability of the underlying map
+			// when dragging has completed
+			this.map.addEventListener(
+				"dragend",
+				ev => {
+					let target = ev.target;
+					if (target instanceof mapsjs.map.Marker) {
+						this.behavior.enable();
+					}
+					this.calculateRouteFromAtoB(this.coords, this.coords2);
+				},
+				false
+			);
+
+			// Listen to the drag event and move the position of the marker
+			// as necessary
+			this.map.addEventListener(
+				"drag",
+				ev => {
+					let target = ev.target,
+						pointer = ev.currentPointer;
+					if (target instanceof mapsjs.map.Marker) {
+						const newcoords = this.map.screenToGeo(
+							pointer.viewportX,
+							pointer.viewportY
+						);
+						changeCoords(newcoords);
+						target.setPosition(newcoords);
+					}
+				},
+				false
+			);
+			return marker;
+		},
 		calculateRouteFromAtoB(coords, coords2) {
+			console.log("calculateRouteFromAtoB", coords, coords2);
+
+			if (coords == null || coords2 == null) return;
 			this.router.calculateRoute(
 				{
 					mode: "fastest;car",
@@ -332,7 +396,7 @@ export default {
 			}
 		);
 
-		const behavior = new H.mapevents.Behavior(
+		this.behavior = new H.mapevents.Behavior(
 			new H.mapevents.MapEvents(this.map)
 		);
 		// Obtain an Explore object through which to submit search requests:
