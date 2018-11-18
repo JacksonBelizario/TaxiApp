@@ -53,13 +53,6 @@
     <v-toolbar color="amber" app absolute clipped-left>
       <v-toolbar-side-icon @click.native="drawer = !drawer"></v-toolbar-side-icon>
       <span class="title ml-3 mr-5">Taxi&nbsp;<span class="font-weight-light">App</span></span>
-      <v-text-field
-        solo-inverted
-        flat
-        hide-details
-        label="Pesquisar"
-        prepend-inner-icon="search"
-      ></v-text-field>
       <v-spacer></v-spacer>
         <v-tooltip bottom>
           <v-btn
@@ -93,7 +86,7 @@
                   <v-list-tile-title>{{ location.origin }}</v-list-tile-title>
                 </v-list-tile-content>
               </v-list-tile>
-              <v-list-tile @click.stop="setDestiny">
+              <v-list-tile @click.stop="toggleDialog">
                 <v-list-tile-action>
                   <v-icon>place</v-icon>
                 </v-list-tile-action>
@@ -105,7 +98,8 @@
             </v-list>
           </v-navigation-drawer>
         </v-card>
-        <here-map ref="mapView" :app-id="map.appId" :app-code="map.appCode" :mHeigth="map.height" :onGetPos="onGetPos" :onGetDestiny="onGetDestiny" />
+        <here-map ref="mapView" :app-id="map.appId" :app-code="map.appCode" :mHeigth="map.height" :onGetPos="onGetPos" :onGetDestiny="onGetDestiny" :onResultSearch="onResultSearch" />
+        <dialog-search ref="dialogSearch" :selectLocation="selectDestiny" :onSearch="onSearch" :locations="locationsSearch" :setDestination="setDestination" />
     </v-content>
   </v-app>
 </template>
@@ -113,7 +107,8 @@
 <script>
 export default {
 	components: {
-		HereMap: () => import("./components/HereMap.vue")
+		HereMap: () => import("./components/HereMap.vue"),
+		DialogSearch: () => import("./components/DialogSearch.vue")
 	},
 	data: () => ({
 		showRoute: false,
@@ -127,6 +122,7 @@ export default {
 			origin: "Origem",
 			destination: "Destino"
 		},
+		locationsSearch: [],
 		drawer: null,
 		items: [
 			{ icon: "lightbulb_outline", text: "Notes" },
@@ -172,11 +168,28 @@ export default {
 		onGetPos(res) {
 			this.location.origin = res.label;
 		},
-		setDestiny() {
+		selectDestiny() {
 			this.$refs.mapView.setDestinyByClick();
+			this.toggleDialog();
 		},
 		onGetDestiny(res) {
 			this.location.destination = res.label;
+		},
+		toggleDialog() {
+			this.$refs.dialogSearch.toggleDialog();
+		},
+		onSearch(res) {
+			console.log("onSearch", res);
+			this.$refs.mapView.searchLocation(res);
+		},
+		onResultSearch(res) {
+			console.log("onResultSearch", res);
+			this.locationsSearch = res;
+		},
+		setDestination(coord) {
+			console.log("setDestination");
+			this.$refs.mapView.setDestination(coord);
+			this.toggleDialog();
 		}
 	}
 };
