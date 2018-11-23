@@ -19,3 +19,19 @@ yarn run build
 ```
 yarn run lint
 ```
+### Iniciar Postgres
+```
+sudo systemctl start postgresql
+```
+
+### Criar tabelas no servidor
+```
+cd server
+php artisan migrate
+```
+
+### Iniciar Servidor PHP
+```
+cd server/public
+php -S localhost:8000 -t public
+```
