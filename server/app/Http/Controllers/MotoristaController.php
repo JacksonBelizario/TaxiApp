@@ -3,13 +3,13 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\Cliente;
+use App\Models\Motorista;
 use Firebase\JWT\JWT;
 
-class ClienteController extends Controller
+class MotoristaController extends Controller
 {
-	const MODEL = "App\Models\Cliente";
-    protected $modelClass = Cliente::class;
+	const MODEL = "App\Models\Motorista";
+    protected $modelClass = Motorista::class;
     private $request;
     
     
@@ -29,9 +29,9 @@ class ClienteController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index(Cliente $clientes)
+    public function index(Motorista $motoristas)
     {
-        return $clientes->get();
+        return $motoristas->get();
     }
 
     /**
@@ -40,7 +40,7 @@ class ClienteController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show(Cliente $cliente)
+    public function show(Motorista $motorista)
     {
         //
     }
@@ -82,11 +82,11 @@ class ClienteController extends Controller
     /**
      * Create a new token.
      */
-    protected function jwt(Cliente $user)
+    protected function jwt(Motorista $user)
     {
         $payload = [
-            'iss' => "cliente", // Issuer of the token
-            'id' => $user->id_cliente, // Subject of the token
+            'iss' => "motorista", // Issuer of the token
+            'id' => $user->id_motorista, // Subject of the token
             'iat' => time(), // Time when JWT was issued.
             'exp' => time() + 60 * 60 * 8, // Expiration time
         ];
@@ -99,7 +99,7 @@ class ClienteController extends Controller
     /**
      * Authenticate a user and return the token if the provided credentials are correct.
      */
-    public function auth(Cliente $cliente)
+    public function auth(Motorista $motorista)
     {
         $this->validate($this->request, [
             'email' => 'required|email',
@@ -107,7 +107,7 @@ class ClienteController extends Controller
         ]);
 
         // Find the user by email
-        $user = $cliente->where('email', $this->request->input('email'))->first();
+        $user = $motorista->where('email', $this->request->input('email'))->first();
 
         if (!$user) {
             return response()->json([
