@@ -1,6 +1,6 @@
 # taxiapp
 
-## Project setup
+## Client setup
 ```
 yarn install
 ```
@@ -24,9 +24,14 @@ yarn run lint
 sudo systemctl start postgresql
 ```
 
-### Criar tabelas no servidor
+### Server setup
 ```
 cd server
+composer install
+```
+
+### Criar tabelas no servidor
+```
 php artisan migrate
 ```
 

@@ -24,7 +24,7 @@ $router->group(['prefix' => 'cliente', 'middleware' => 'jwt.auth'], function () 
     $router->delete('/{cliente}', 'ClienteController@destroy');
 });
 
-$router->post('motorista/auth', 'ClienteController@auth');
+$router->post('motorista/auth', 'MotoristaController@auth');
 $router->group(['prefix' => 'motorista', 'middleware' => 'jwt.auth'], function () use ($router) {
     $router->get('/', 'MotoristaController@index');
     $router->get('/{motorista}', 'MotoristaController@show');

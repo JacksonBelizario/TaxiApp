@@ -39,6 +39,13 @@ class Motorista extends Model
     protected $fillable = ['email', 'nome', 'contato', 'senha', 'endereco', 'documento', 'created_at', 'updated_at'];
 
     /**
+     * Define os atributos não exibidos após a serialização
+     *
+     * @var array
+     */
+    protected $hidden = ['senha'];
+    
+    /**
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
     public function veiculos()
