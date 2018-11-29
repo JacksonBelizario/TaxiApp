@@ -13,6 +13,7 @@ Vue.use(VueGeolocation);
 Vue.use(VueRouter);
 
 const router = new VueRouter({
+	mode: 'history',
 	routes: [
 		{
 			path: '/',
@@ -33,32 +34,12 @@ const router = new VueRouter({
 			]
 		},
 		// {
-		// 	path: "/projetos",
-		// 	name: "Projetos",
-		// 	component: () => import(`@/components/Projetos.vue`),
-		// 	beforeEnter: (to, from, next) => {
-		// 		if(from.path != "/") return;
-		// 		/**
-		// 		 * Administração e Gestão
-		// 		 */
-		// 		if([1, 2].includes(store.getters.usuario.usuario_cargo) || NODE_ENV == "development") {
-		// 			next();
-		// 		}
-		// 	}
-		// },
-		// {
-		// 	path: "/usuario/:id?",
-		// 	name: "Usuario",
-		// 	component: Usuario,
+		// 	path: "/sample/:id?",
+		// 	name: "Sample",
+		// 	component: Sample,
 		// 	props: true,
 		// 	beforeEnter: (to, from, next) => {
-		// 		/**
-		// 		 * Administração e Gestão
-		// 		 */
-		// 		/**
-		// 		 * O usuário acessa edição apenas de seu próprio perfil
-		// 		 */
-		// 		if([1, 2].includes(store.getters.usuario.usuario_cargo) || to.params.id == store.getters.usuario.id_pessoa || NODE_ENV == "development") {
+		// 		if([1, 2].includes(localStorage.token)) {
 		// 			next();
 		// 		}
 		// 	}
