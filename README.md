@@ -1,7 +1,16 @@
-# taxiapp
+# TaxiApp
+
+[![Login Page](https://raw.githubusercontent.com/JacksonBelizario/TaxiApp/master/docs/Screenshot_TaxiApp_1.png)](https://raw.githubusercontent.com/JacksonBelizario/TaxiApp/master/docs/Screenshot_TaxiApp_1.png) [![Main Page](https://raw.githubusercontent.com/JacksonBelizario/TaxiApp/master/docs/Screenshot_TaxiApp_2.png)](https://raw.githubusercontent.com/JacksonBelizario/TaxiApp/master/docs/Screenshot_TaxiApp_2.png)
+
+[![Search Location Page](https://raw.githubusercontent.com/JacksonBelizario/TaxiApp/master/docs/Screenshot_TaxiApp_3.png)](https://raw.githubusercontent.com/JacksonBelizario/TaxiApp/master/docs/Screenshot_TaxiApp_3.png) [![Example Page](https://raw.githubusercontent.com/JacksonBelizario/TaxiApp/master/docs/Screenshot_TaxiApp_4.png)](https://raw.githubusercontent.com/JacksonBelizario/TaxiApp/master/docs/Screenshot_TaxiApp_4.png)
+
+Conceptual Project for College Work (Like Uber) (Unfinished)
+
+Project with Vue.Js and Laravel
 
 ## Client setup
 ```
+cd client
 yarn install
 ```
 
@@ -30,12 +39,12 @@ cd server
 composer install
 ```
 
-### Criar tabelas no servidor
+### Make tables on database
 ```
 php artisan migrate
 ```
 
-### Iniciar Servidor PHP
+### Start PHP
 ```
 cd server/public
 php -S localhost:8000 -t public
